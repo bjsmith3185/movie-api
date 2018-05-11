@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Favorite Movies</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.min.css" />
+</head>
+
+<body>
+        <div class="container">
+          <h2>Movie Info App</h2>
+          <div class="btn btn-group">
+            <button class="btn btn-default" type="submit" id="submit">Submit</button>
+            <input type="text" class="form-control" id="movieName" placeholder="Enter Movie Title for info.">
+          </div>
+
+          <div class="btn btn-group">
+              <button class="btn btn-warning" id="reset">Reset</button>
+          </div>
+
+          <p>This search provides movie info</p>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Poster</th>
+                <th scope="col">Movie Name</th>
+                <th scope="col">Year</th>
+                <th scope="col">Actors</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Insert movie rows here -->
+            </tbody>
+          </table>
+        </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript">
+    // The below code fills in the first row of the table
+ //   var movie = "Mr. Nobody";
+    var tBody = "";
+    var tRow = "";
+
+
+  $("#submit").on("click", function() {
+      var movie = $("#movieName").val();
+      console.log("this is " + movie);
+      var queryURL = "https://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy";
+      console.log("this is url " + queryURL);
+
+    $.ajax({
+      url: queryURL,
+      method: "GET"
+    }).then(function(response) {
+
+        console.log("this is JSON: " + response);
+
+      // Get reference to existing tbody element, create a new table row element
+      var tBody = $("tbody");
+      var tRow = $("<tr>");
+
+      // Methods run on jQuery selectors return the selector they we run on
+      // This is why we can create and save a reference to a td in the same statement we update its text
+      var posterTd = $("<img src='" + response.Poster + "' />").addClass("info");
+                console.log("poster " + response.Poster);
+      var titleTd = $("<td>").text(response.Title);
+              console.log("title " + response.Title);
+             
+      var yearTd = $("<td>").text(response.Year);
+                console.log("year " + response.Year);
+      var actorsTd = $("<td>").text(response.Actors);
+                console.log("actors " + response.Actors);
+      // Append the newly created table data to the table row
+      tRow.append(posterTd, titleTd, yearTd, actorsTd);
+      // Append the table row to the table body
+      tBody.append(tRow);
+     });
+   });
+
+
+    $("#reset").on("click", function() {
+    $("img").remove();
+    $("td").remove();
+    //document.getElementById("movieName").placeholder = "Enter Movie Title for info.";
+    $("<input>").attr("placeholder", "Enter Movie Title for info.");
+
+    });
+
+
+  </script>
+</body>
+
+</html>
